@@ -51,3 +51,9 @@ MANIFEST
 # SSL Used for running server locally
 cert.pem
 key.pem
+/Python310-mineru
+/tempdir
+/gitbigfileftp.exe
+/gitbigfilex.json
+/gitbigfilex.json.md5.txt
+/gitbigfilex_dense.zip
