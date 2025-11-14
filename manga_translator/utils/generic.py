@@ -16,7 +16,7 @@ import re
 # import unicodedata # ❌ 不需要 - 仅用于文本处理
 import json
 # from shapely import affinity                    # ❌ 不需要 - 仅用于几何变换
-# from shapely.geometry import Polygon, MultiPoint # ❌ 不需要 - 仅用于文本区域检测
+from shapely.geometry import Polygon, MultiPoint # ❌ 不需要 - 仅用于文本区域检测
 
 try:
     functools.cached_property
