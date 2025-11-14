@@ -1,13 +1,19 @@
-import argparse
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 配置文件 - 仅保留 Inpainter 推理所需部分
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# import argparse  # ❌ 不需要 - 仅用于命令行参数解析
 import re
 from enum import Enum
 
 from typing import Optional, Any, Literal, List
 
-from omegaconf import OmegaConf
+# from omegaconf import OmegaConf  # ❌ 不需要 - 仅用于 GPT 配置文件加载
 from pydantic import BaseModel, Field
 
 
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ❌ 不需要 - 翻译相关配置 (注释掉以减少依赖)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # TODO: Refactor
 class TranslatorChain:
     def __init__(self, string: str):

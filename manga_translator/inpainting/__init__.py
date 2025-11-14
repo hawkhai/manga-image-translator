@@ -1,22 +1,18 @@
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Inpainter 模块 - 只保留 LaMa 相关
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 from typing import Optional
 
 import numpy as np
 
 from .common import CommonInpainter, OfflineInpainter
-from .inpainting_aot import AotInpainter
 from .inpainting_lama_mpe import LamaMPEInpainter, LamaLargeInpainter
-from .inpainting_sd import StableDiffusionInpainter
-from .none import NoneInpainter
-from .original import OriginalInpainter
 from ..config import Inpainter, InpainterConfig
 
+# ━━━ 只保留 LaMa 相关的修复器 ━━━
 INPAINTERS = {
-    Inpainter.default: AotInpainter,
     Inpainter.lama_large: LamaLargeInpainter,
     Inpainter.lama_mpe: LamaMPEInpainter,
-    Inpainter.sd: StableDiffusionInpainter,
-    Inpainter.none: NoneInpainter,
-    Inpainter.original: OriginalInpainter,
 }
 inpainter_cache = {}
 

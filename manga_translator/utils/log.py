@@ -1,16 +1,21 @@
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 日志系统 - 简化版本
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 import logging
-import colorama
+# import colorama  # ❌ 不需要 - 仅用于彩色终端输出
 
 from .generic import replace_prefix
 
 ROOT_TAG = 'manga-translator'
 
 class Formatter(logging.Formatter):
+    """logging.日志格式化器 - 简化版本，去除颜色代码"""
     def formatMessage(self, record: logging.LogRecord) -> str:
+        # ━━━ 简化版本：去除 colorama 颜色，使用纯文本格式 ━━━
         if record.levelno >= logging.ERROR:
-            self._style._fmt = f'{colorama.Fore.RED}%(levelname)s:{colorama.Fore.RESET} [%(name)s] %(message)s'
+            self._style._fmt = 'ERROR: [%(name)s] %(message)s'
         elif record.levelno >= logging.WARN:
-            self._style._fmt = f'{colorama.Fore.YELLOW}%(levelname)s:{colorama.Fore.RESET} [%(name)s] %(message)s'
+            self._style._fmt = 'WARNING: [%(name)s] %(message)s'
         elif record.levelno == logging.DEBUG:
             self._style._fmt = '[%(name)s] %(message)s'
         else:

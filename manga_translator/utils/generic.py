@@ -1,19 +1,22 @@
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 核心依赖 (LaMa 推理必需)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 import os
 from typing import List, Callable, Tuple, Optional
 import numpy as np
 import cv2
 import functools
 from PIL import Image
-import tqdm
-import requests
+import tqdm          # 进度条显示
+import requests      # 模型文件下载
 import sys
-import hashlib
+import hashlib       # 文件哈希校验
 import re
-import einops
-import unicodedata
+# import einops      # ❌ 不需要 - 仅用于复杂张量操作
+# import unicodedata # ❌ 不需要 - 仅用于文本处理
 import json
-from shapely import affinity
-from shapely.geometry import Polygon, MultiPoint
+# from shapely import affinity                    # ❌ 不需要 - 仅用于几何变换
+# from shapely.geometry import Polygon, MultiPoint # ❌ 不需要 - 仅用于文本区域检测
 
 try:
     functools.cached_property
