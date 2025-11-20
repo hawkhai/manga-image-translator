@@ -11,6 +11,7 @@ import os
 import shutil
 from torch import Tensor
 
+import time, inspect
 from .common import OfflineInpainter
 from ..config import InpainterConfig
 from ..utils import resize_keep_aspect
@@ -53,7 +54,11 @@ class LamaMPEInpainter(OfflineInpainter):
     async def _unload(self):
         del self.model
 
-    async def _infer(self, image: np.ndarray, mask: np.ndarray, config: InpainterConfig, inpainting_size: int = 1024, verbose: bool = False) -> np.ndarray:
+    async def _infer(self, image: np.ndarray, mask: np.ndarray, config: InpainterConfig, inpainting_size: int = 1024, verbose: bool = False, time_stats=None) -> np.ndarray:
+    
+        if time_stats == None: time_stats = {}
+        time_stats["last"+os.path.basename(__file__)] = time.time()
+
         img_original = np.copy(image)
         mask_original = np.copy(mask)
         mask_original[mask_original < 127] = 0
@@ -92,7 +97,15 @@ class LamaMPEInpainter(OfflineInpainter):
             img_torch *= (1 - mask_torch)
             if not (self.device.startswith('cuda')):
                 # mps devices here
+                time_stats[f"[{os.path.basename(__file__)} {inspect.currentframe().f_lineno}]"] = time.time() - time_stats["last"+os.path.basename(__file__)]
+                time_stats["last"+os.path.basename(__file__)] = time.time()
+
+                print("***" * 30 + "img_inpainted_torch")
                 img_inpainted_torch = self.model(img_torch, mask_torch)
+
+                time_stats[f"[{os.path.basename(__file__)} {inspect.currentframe().f_lineno}] img_inpainted_torch"] = time.time() - time_stats["last"+os.path.basename(__file__)]
+                time_stats["last"+os.path.basename(__file__)] = time.time()
+
             else:
                 # Note: lama's weight shouldn't be convert to fp16 or bf16 otherwise it produces darkened results.
                 # but it can inference under torch.autocast
@@ -104,7 +117,15 @@ class LamaMPEInpainter(OfflineInpainter):
                     self.logger.warning('Switch to bf16 due to Lama only compatible with bf16 and fp32.')
 
                 with torch.autocast(device_type="cuda", dtype=precision):
+
+                    time_stats[f"[{os.path.basename(__file__)} {inspect.currentframe().f_lineno}]"] = time.time() - time_stats["last"+os.path.basename(__file__)]
+                    time_stats["last"+os.path.basename(__file__)] = time.time()
+
+                    print("***" * 30 + "img_inpainted_torch")
                     img_inpainted_torch = self.model(img_torch, mask_torch)
+
+                    time_stats[f"[{os.path.basename(__file__)} {inspect.currentframe().f_lineno}] img_inpainted_torch"] = time.time() - time_stats["last"+os.path.basename(__file__)]
+                    time_stats["last"+os.path.basename(__file__)] = time.time()
 
         if isinstance(self.model, LamaFourier):
             img_inpainted_torch = img_inpainted_torch.to(torch.float32)
@@ -115,6 +136,10 @@ class LamaMPEInpainter(OfflineInpainter):
         if new_h != height or new_w != width:
             img_inpainted = cv2.resize(img_inpainted, (width, height), interpolation = cv2.INTER_LINEAR)
         ans = img_inpainted * mask_original + img_original * (1 - mask_original)
+
+        time_stats[f"[{os.path.basename(__file__)} {inspect.currentframe().f_lineno}]"] = time.time() - time_stats["last"+os.path.basename(__file__)]
+        time_stats["last"+os.path.basename(__file__)] = time.time()
+
         return ans
     
 

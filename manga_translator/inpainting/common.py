@@ -6,11 +6,11 @@ from ..utils import InfererModule, ModelWrapper
 
 class CommonInpainter(InfererModule):
 
-    async def inpaint(self, image: np.ndarray, mask: np.ndarray, config: InpainterConfig, inpainting_size: int = 1024, verbose: bool = False) -> np.ndarray:
-        return await self._inpaint(image, mask, config, inpainting_size, verbose)
+    async def inpaint(self, image: np.ndarray, mask: np.ndarray, config: InpainterConfig, inpainting_size: int = 1024, verbose: bool = False, time_stats=None) -> np.ndarray:
+        return await self._inpaint(image, mask, config, inpainting_size, verbose, time_stats)
 
     @abstractmethod
-    async def _inpaint(self, image: np.ndarray, mask: np.ndarray, config: InpainterConfig, inpainting_size: int = 1024, verbose: bool = False) -> np.ndarray:
+    async def _inpaint(self, image: np.ndarray, mask: np.ndarray, config: InpainterConfig, inpainting_size: int = 1024, verbose: bool = False, time_stats=None) -> np.ndarray:
         pass
 
 class OfflineInpainter(CommonInpainter, ModelWrapper):
@@ -20,5 +20,5 @@ class OfflineInpainter(CommonInpainter, ModelWrapper):
         return await self.infer(*args, **kwargs)
 
     @abstractmethod
-    async def _infer(self, image: np.ndarray, mask: np.ndarray, config: InpainterConfig, inpainting_size: int = 1024, verbose: bool = False) -> np.ndarray:
+    async def _infer(self, image: np.ndarray, mask: np.ndarray, config: InpainterConfig, inpainting_size: int = 1024, verbose: bool = False, time_stats=None) -> np.ndarray:
         pass
